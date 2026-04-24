@@ -1,0 +1,57 @@
+# --- Secrets & credentials ---
+.env
+*.env
+.env.*
+secrets/
+*.secret
+*.key
+*.pem
+*.p12
+*.pfx
+
+# --- Caddy auto-managed certs (stored separately by Caddy) ---
+/caddy/data/
+/caddy/certificates/
+
+# --- Media (large binary, not config) ---
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.mp3
+*.flac
+*.aac
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.raw
+*.iso
+
+# --- Database dumps & persistent data ---
+*.sql
+*.dump
+*.db
+*.sqlite
+
+# --- Docker runtime state ---
+docker/*/data/
+docker/*/db/
+docker/*/media/
+docker/*/downloads/
+docker/*/cache/
+
+# --- /srv role-separated data volumes (config tracked, data not) ---
+# /srv/web    ← tracked (Caddyfile, compose)
+# /srv/media  ← NOT tracked (actual media files)
+# /srv/data   ← NOT tracked (app state, databases)
+# /srv/backup ← NOT tracked (backup archives)
+
+# --- Misc ---
+*.log
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db
