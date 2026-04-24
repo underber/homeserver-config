@@ -1,0 +1,14 @@
+[Unit]
+Description=Auto classify music incoming into library or doujin
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/srv/scripts/music-classify.sh
+Restart=always
+RestartSec=3
+User=volkh
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target

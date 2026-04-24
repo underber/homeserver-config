@@ -1,0 +1,15 @@
+[Unit]
+Description=Mount unit for snap-store, revision 1310
+After=snapd.mounts-pre.target
+Before=snapd.mounts.target
+
+[Mount]
+What=/var/lib/snapd/snaps/snap-store_1310.snap
+Where=/snap/snap-store/1310
+Type=squashfs
+Options=nodev,ro,x-gdu.hide,x-gvfs-hide
+LazyUnmount=yes
+
+[Install]
+WantedBy=snapd.mounts.target
+WantedBy=multi-user.target

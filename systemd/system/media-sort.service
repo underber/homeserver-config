@@ -1,0 +1,14 @@
+[Unit]
+Description=Auto sort uploads into music and manga
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/srv/scripts/media-sort.sh
+Restart=always
+RestartSec=3
+User=volkh
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target

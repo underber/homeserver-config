@@ -1,0 +1,15 @@
+[Unit]
+Description=Mount unit for mesa-2404, revision 1165
+After=snapd.mounts-pre.target
+Before=snapd.mounts.target
+
+[Mount]
+What=/var/lib/snapd/snaps/mesa-2404_1165.snap
+Where=/snap/mesa-2404/1165
+Type=squashfs
+Options=nodev,ro,x-gdu.hide,x-gvfs-hide
+LazyUnmount=yes
+
+[Install]
+WantedBy=snapd.mounts.target
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Start Page API
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /srv/www/start/api.py
+Restart=always
+User=volkh
+
+[Install]
+WantedBy=multi-user.target

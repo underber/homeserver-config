@@ -1,0 +1,20 @@
+[Unit]
+# Auto-generated, DO NOT EDIT
+Description=Service for snap application mesa-2404.component-monitor
+Requires=snap-mesa\x2d2404-1165.mount
+Wants=network.target
+After=snap-mesa\x2d2404-1165.mount network.target snapd.apparmor.service
+X-Snappy=yes
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/usr/bin/snap run mesa-2404.component-monitor
+SyslogIdentifier=mesa-2404.component-monitor
+Restart=always
+RestartSec=3s
+WorkingDirectory=/var/snap/mesa-2404/1165
+TimeoutStopSec=30s
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

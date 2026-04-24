@@ -1,0 +1,10 @@
+[Unit]
+Description=WAV to FLAC auto converter
+
+[Service]
+ExecStart=/bin/bash /srv/services/convert.sh
+Restart=always
+User=volkh
+
+[Install]
+WantedBy=multi-user.target

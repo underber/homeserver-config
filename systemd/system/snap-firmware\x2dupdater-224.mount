@@ -1,0 +1,15 @@
+[Unit]
+Description=Mount unit for firmware-updater, revision 224
+After=snapd.mounts-pre.target
+Before=snapd.mounts.target
+
+[Mount]
+What=/var/lib/snapd/snaps/firmware-updater_224.snap
+Where=/snap/firmware-updater/224
+Type=squashfs
+Options=nodev,ro,x-gdu.hide,x-gvfs-hide
+LazyUnmount=yes
+
+[Install]
+WantedBy=snapd.mounts.target
+WantedBy=multi-user.target

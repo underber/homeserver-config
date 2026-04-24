@@ -1,0 +1,51 @@
+:80 {
+    @adguard host adguard.ts
+    handle @adguard {
+        reverse_proxy 127.0.0.1:3000
+    }
+
+    @cloud host cloud.ts
+    handle @cloud {
+        reverse_proxy 127.0.0.1:8080
+    }
+
+    @jellyfin_host host jellyfin.ts
+    handle @jellyfin_host {
+        reverse_proxy 127.0.0.1:8096
+    }
+
+    @komga_host host komga.ts
+    handle @komga_host {
+        reverse_proxy 127.0.0.1:25600
+    }
+
+    @navidrome_host host navidrome.ts
+    handle @navidrome_host {
+        reverse_proxy 127.0.0.1:4533
+    }
+
+    handle_path /api/* {
+        reverse_proxy 127.0.0.1:5000
+    }
+
+    handle_path /jellyfin* {
+        reverse_proxy 127.0.0.1:8096
+    }
+
+    handle_path /nextcloud* {
+        reverse_proxy 127.0.0.1:8080
+    }
+
+    handle_path /komga* {
+        reverse_proxy 127.0.0.1:25600
+    }
+
+    handle_path /navidrome* {
+        reverse_proxy 127.0.0.1:4533
+    }
+
+    handle {
+        root * /srv/www/start
+        file_server
+    }
+}
