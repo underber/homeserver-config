@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    image: nextcloud
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: db
+    volumes:
+      - nextcloud_data:/var/www/html
+      - /srv/shares:/mnt/share
+      - /srv/media:/mnt/media
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  nextcloud_data:

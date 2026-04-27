@@ -1,0 +1,11 @@
+services:
+  syncthing:
+    image: syncthing/syncthing
+    container_name: syncthing
+    ports:
+      - "8384:8384"
+      - "22000:22000"
+      - "21027:21027/udp"
+    volumes:
+      - ./data:/var/syncthing
+    restart: unless-stopped

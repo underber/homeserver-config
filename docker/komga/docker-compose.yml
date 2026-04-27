@@ -1,0 +1,11 @@
+services:
+  komga:
+    image: gotson/komga:latest
+    container_name: komga
+    user: "1000:1000"
+    ports:
+      - "25600:25600"
+    volumes:
+      - /srv/services/komga/config:/config
+      - /srv/nas/manga/library:/data
+    restart: unless-stopped

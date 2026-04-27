@@ -49,8 +49,19 @@ sync_dir() {
     ok "$src/"
 }
 
-echo "==> Syncing docker-compose files  (~/docker/ -> docker/)"
-sync_dir ~/docker "$REPO/docker"
+echo "==> Syncing docker compose files  (/srv/docker/ -> docker/)"
+for svc in /srv/docker/*/; do
+    name="$(basename "$svc")"
+    for f in docker-compose.yml compose.yml; do
+        if [[ -f "$svc$f" ]]; then
+            dst="$REPO/docker/$name/$f"
+            mkdir -p "$(dirname "$dst")"
+            cp "$svc$f" "$dst"
+            ok "$svc$f"
+            break
+        fi
+    done
+done
 
 echo "==> Syncing Caddyfile  (/etc/caddy/Caddyfile -> caddy/)"
 sync_file /etc/caddy/Caddyfile "$REPO/caddy/Caddyfile"
@@ -58,11 +69,9 @@ sync_file /etc/caddy/Caddyfile "$REPO/caddy/Caddyfile"
 echo "==> Syncing systemd user units  (~/.config/systemd/user/ -> systemd/user/)"
 sync_dir ~/.config/systemd/user "$REPO/systemd/user"
 
-echo "==> Syncing systemd system units  (/etc/systemd/system/*.local.* -> systemd/system/)"
-# Only copy units you own — avoid pulling in distro-managed units.
+echo "==> Syncing systemd system units  (/etc/systemd/system/ -> systemd/system/)"
 if [[ -d /etc/systemd/system ]]; then
     mkdir -p "$REPO/systemd/system"
-    # Copy *.service / *.timer / *.mount that are not symlinks to /lib (distro units).
     find /etc/systemd/system \
         -maxdepth 1 \
         \( -name '*.service' -o -name '*.timer' -o -name '*.mount' -o -name '*.socket' \) \
@@ -73,8 +82,8 @@ else
     skip "/etc/systemd/system/ (not found)"
 fi
 
-echo "==> Syncing scripts  (~/scripts/ -> scripts/)"
-sync_dir ~/scripts "$REPO/scripts"
+echo "==> Syncing scripts  (/srv/scripts/ -> scripts/)"
+sync_dir /srv/scripts "$REPO/scripts"
 
 echo ""
 echo "Done. Review with: git -C '$REPO' diff"

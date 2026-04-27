@@ -1,51 +1,204 @@
+{
+	auto_https off
+	tailscale {
+		auth_key {env.TS_AUTHKEY}
+		ephemeral false
+		adguard {
+			tags tag:caddy
+		}
+		cloud {
+			tags tag:caddy
+		}
+		freshrss {
+			tags tag:caddy
+		}
+		jellyfin {
+			tags tag:caddy
+		}
+		kavita {
+			tags tag:caddy
+		}
+		komga {
+			tags tag:caddy
+		}
+		navidrome {
+			tags tag:caddy
+		}
+		portainer {
+			tags tag:caddy
+		}
+		searxng {
+			tags tag:caddy
+		}
+		sync {
+			tags tag:caddy
+		}
+		vault {
+			tags tag:caddy
+		}
+	}
+}
+
+# === Existing HTTP routes (LAN access via *.ts short names) ===
+
+adguard.ts:80 {
+	reverse_proxy 127.0.0.1:3000
+}
+
+cloud.ts:80 {
+	reverse_proxy 127.0.0.1:8080
+}
+
+freshrss.ts:80 {
+	reverse_proxy 127.0.0.1:8085
+}
+
+glances.ts:80 {
+	reverse_proxy 127.0.0.1:61208
+}
+
+home.ts:80 {
+	reverse_proxy 127.0.0.1:3001
+}
+
+jellyfin.ts:80 {
+	reverse_proxy 127.0.0.1:8096
+}
+
+kavita.ts:80 {
+	reverse_proxy 127.0.0.1:5001
+}
+
+komga.ts:80 {
+	reverse_proxy 127.0.0.1:25600
+}
+
+navidrome.ts:80 {
+	reverse_proxy 127.0.0.1:4533
+}
+
+portainer.ts:80 {
+	reverse_proxy https://127.0.0.1:9443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+searxng.ts:80 {
+	reverse_proxy 127.0.0.1:8081
+}
+
+sync.ts:80 {
+	reverse_proxy 127.0.0.1:8384
+}
+
+vault.ts:80 {
+	reverse_proxy 127.0.0.1:8222
+}
+
+# Catch-all: serve startpage, proxy API
 :80 {
-    @adguard host adguard.ts
-    handle @adguard {
-        reverse_proxy 127.0.0.1:3000
-    }
+	handle /api/* {
+		reverse_proxy 127.0.0.1:5000
+	}
 
-    @cloud host cloud.ts
-    handle @cloud {
-        reverse_proxy 127.0.0.1:8080
-    }
+	handle {
+		root * /srv/www/start
+		file_server
+	}
+}
 
-    @jellyfin_host host jellyfin.ts
-    handle @jellyfin_host {
-        reverse_proxy 127.0.0.1:8096
-    }
+# === HTTPS via Tailscale ===
 
-    @komga_host host komga.ts
-    handle @komga_host {
-        reverse_proxy 127.0.0.1:25600
-    }
+:443 {
+	bind tailscale/adguard
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:3000
+}
 
-    @navidrome_host host navidrome.ts
-    handle @navidrome_host {
-        reverse_proxy 127.0.0.1:4533
-    }
+:443 {
+	bind tailscale/cloud
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8080
+}
 
-    handle_path /api/* {
-        reverse_proxy 127.0.0.1:5000
-    }
+:443 {
+	bind tailscale/freshrss
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8085
+}
 
-    handle_path /jellyfin* {
-        reverse_proxy 127.0.0.1:8096
-    }
+:443 {
+	bind tailscale/jellyfin
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8096
+}
 
-    handle_path /nextcloud* {
-        reverse_proxy 127.0.0.1:8080
-    }
+:443 {
+	bind tailscale/kavita
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:5001
+}
 
-    handle_path /komga* {
-        reverse_proxy 127.0.0.1:25600
-    }
+:443 {
+	bind tailscale/komga
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:25600
+}
 
-    handle_path /navidrome* {
-        reverse_proxy 127.0.0.1:4533
-    }
+:443 {
+	bind tailscale/navidrome
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:4533
+}
 
-    handle {
-        root * /srv/www/start
-        file_server
-    }
+:443 {
+	bind tailscale/portainer
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy https://127.0.0.1:9443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+:443 {
+	bind tailscale/searxng
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8081
+}
+
+:443 {
+	bind tailscale/sync
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8384
+}
+
+:443 {
+	bind tailscale/vault
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8222
 }

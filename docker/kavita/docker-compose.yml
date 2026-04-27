@@ -1,0 +1,13 @@
+services:
+  kavita:
+    image: jvmilazz0/kavita:latest
+    container_name: kavita
+    user: "1000:1000"
+    ports:
+      - "5001:5000"
+    volumes:
+      - /srv/services/kavita/config:/kavita/config
+      - /srv/media/manga/library:/manga
+      - /srv/media/comics/library:/comics
+      - /srv/nas/manga/library:/nas-manga
+    restart: unless-stopped
