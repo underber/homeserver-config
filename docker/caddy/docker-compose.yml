@@ -1,0 +1,17 @@
+services:
+  caddy:
+    build: .
+    image: caddy-tailscale:local
+    container_name: caddy
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

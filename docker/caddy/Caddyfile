@@ -1,0 +1,16 @@
+{
+	auto_https off
+	tailscale {
+		auth_key {env.TS_AUTHKEY}
+		ephemeral false
+	}
+}
+
+# --- Pilot: jellyfin ---
+:443 {
+	bind tailscale/jellyfin
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy localhost:8096
+}

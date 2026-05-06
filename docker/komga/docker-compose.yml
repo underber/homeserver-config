@@ -7,5 +7,5 @@ services:
       - "25600:25600"
     volumes:
       - /srv/services/komga/config:/config
-      - /srv/nas/manga/library:/data
+      - /srv/media/manga/library:/data
     restart: unless-stopped

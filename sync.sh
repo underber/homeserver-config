@@ -61,6 +61,15 @@ for svc in /srv/docker/*/; do
             break
         fi
     done
+    # Also capture build/config files that live alongside the compose file
+    for f in Dockerfile .dockerignore Caddyfile; do
+        if [[ -f "$svc$f" ]]; then
+            dst="$REPO/docker/$name/$f"
+            mkdir -p "$(dirname "$dst")"
+            cp "$svc$f" "$dst"
+            ok "$svc$f"
+        fi
+    done
 done
 
 echo "==> Syncing Caddyfile  (/etc/caddy/Caddyfile -> caddy/)"
