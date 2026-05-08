@@ -21,7 +21,6 @@ services:
       POSTGRES_HOST: db
     volumes:
       - nextcloud_data:/var/www/html
-      - /srv/shares:/mnt/share
       - /srv/media:/mnt/media
     depends_on:
       - db

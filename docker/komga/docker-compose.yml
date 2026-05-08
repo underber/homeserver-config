@@ -6,6 +6,6 @@ services:
     ports:
       - "25600:25600"
     volumes:
-      - /srv/services/komga/config:/config
+      - /srv/docker/komga/config:/config
       - /srv/media/manga/library:/data
     restart: unless-stopped

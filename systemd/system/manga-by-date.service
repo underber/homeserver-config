@@ -1,0 +1,14 @@
+[Unit]
+Description=Rebuild manga by-date symlinks on library changes
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/srv/scripts/manga-by-date-watch.sh
+Restart=always
+RestartSec=3
+User=volkh
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target

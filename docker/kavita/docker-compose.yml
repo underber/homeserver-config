@@ -6,7 +6,7 @@ services:
     ports:
       - "5001:5000"
     volumes:
-      - /srv/services/kavita/config:/kavita/config
+      - /srv/docker/kavita/config:/kavita/config
       - /srv/media/manga/library:/manga
       - /srv/media/comics/library:/comics
     restart: unless-stopped

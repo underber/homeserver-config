@@ -2,7 +2,7 @@
 Description=WAV to FLAC auto converter
 
 [Service]
-ExecStart=/bin/bash /srv/services/convert.sh
+ExecStart=/bin/bash /srv/scripts/wav2flac.sh
 Restart=always
 User=volkh
 

@@ -10,5 +10,5 @@ services:
       ND_BASEURL: ""
     volumes:
       - ./data:/data
-      - /home/volkh/nas/Audio:/music:ro
+      - /srv/media/music:/music:ro
     restart: unless-stopped
