@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WATCH="/srv/shares/uploads"
+WATCH="/srv/media/incoming"
 MUSIC="/srv/media/music/incoming"
 MANGA_IN="/srv/media/manga/incoming"
-LOG="/srv/shares/uploads/media-sort.log"
+LOG="/srv/media/incoming/media-sort.log"
 
 mkdir -p "$WATCH" "$MUSIC" "$MANGA_IN"
 
@@ -36,7 +36,7 @@ move_one() {
   ext="$(printf '%s' "$ext" | tr '[:upper:]' '[:lower:]')"
 
   case "$ext" in
-    mp3|flac|m4a|wav|aac|ogg)
+    mp3|flac|m4a|wav|aac|ogg|opus)
       dest="$MUSIC/$name"
       ;;
     zip|cbz)
@@ -62,10 +62,13 @@ move_one() {
   echo "$(date '+%F %T') moved: $file -> $dest" >> "$LOG"
 }
 
+# A single failed move_one must never tear down the watcher loop.
+# Calling in a `|| ...` context also disables `set -e` inside the function,
+# so a transient stat/mv failure on a vanishing temp file is non-fatal.
 find "$WATCH" -maxdepth 1 -type f -print0 | while IFS= read -r -d '' f; do
-  move_one "$f"
+  move_one "$f" || echo "$(date '+%F %T') error: $f" >> "$LOG"
 done
 
 inotifywait -mr -e close_write,create,moved_to --format '%w%f' "$WATCH" | while IFS= read -r f; do
-  move_one "$f"
+  move_one "$f" || echo "$(date '+%F %T') error: $f" >> "$LOG"
 done
