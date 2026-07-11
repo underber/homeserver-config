@@ -47,6 +47,16 @@ process_all() {
                     fi
                 fi
                 ;;
+            m4a|opus)
+                OUT_FILE="$OUT_DIR/$BASENAME"
+                if [ ! -f "$OUT_FILE" ] && [ -f "$FILE" ]; then
+                    wait_until_stable "$FILE"
+                    if [ -f "$FILE" ]; then
+                        mv -n -- "$FILE" "$OUT_FILE" 2>/dev/null
+                        changed=1
+                    fi
+                fi
+                ;;
             jpg|jpeg|png|webp|gif|bmp|mp4|m4v|mov)
                 OUT_FILE="$OUT_DIR/$BASENAME"
                 if [ ! -f "$OUT_FILE" ] && [ -f "$FILE" ]; then

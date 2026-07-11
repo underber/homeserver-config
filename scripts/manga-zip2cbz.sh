@@ -20,31 +20,107 @@ wait_until_stable() {
 }
 
 # Return the best-matching existing series directory for a title, or empty string.
-# Two entries match when their common prefix covers >= 80% of the shorter name
-# (minimum 3 chars). Longest common prefix wins among multiple candidates.
+# Logic: normalize the title (strip leading/trailing bracketed tags and trailing
+# volume/edition markers), then compare against the normalized name of every
+# existing series directory. Two titles are considered the same series if:
+#   1. their normalized forms are identical, OR
+#   2. one is a prefix of the other AND the leftover tail is only separators /
+#      volume markers (so "タイトル" ↔ "タイトル 2" matches, but "COMIC 快楽天"
+#      ↔ "COMIC 快楽天ビースト" does not), OR
+#   3. SequenceMatcher.ratio on the normalized forms is >= 0.90.
+# When multiple existing directories pass, the highest score wins.
 find_series_dir() {
   python3 - "$1" "$DEST" <<'PYEOF'
-import os, sys
+import os, re, sys
+from difflib import SequenceMatcher
 
-title = sys.argv[1]
-dest  = sys.argv[2]
-best_path  = ""
-best_score = 0
+THRESH = 0.90
+title_raw = sys.argv[1]
+dest = sys.argv[2]
 
-for name in os.listdir(dest):
-    path = os.path.join(dest, name)
-    if not os.path.isdir(path):
-        continue
-    cp = 0
-    for a, b in zip(title, name):
-        if a == b:
-            cp += 1
-        else:
+BRACKET_PAIRS = [("[", "]"), ("(", ")"), ("（", "）"), ("【", "】"),
+                 ("〔", "〕"), ("「", "」"), ("『", "』"), ("<", ">"), ("〈", "〉")]
+
+VOL_TAIL = (
+    r"(?i)(?:[\s\-_.,。、~〜~+＋&]+)"
+    r"(?:第\s*\d+\s*[巻話章部回]|vol\.?\s*\d+|volume\s*\d+|ch\.?\s*\d+|"
+    r"chapter\s*\d+|\#\s*\d+|\d+(?:\s*[+＋&]\s*\d+)*|"
+    r"[①-⑳]+|[Ⅰ-Ⅻ]+|[一二三四五六七八九十]{1,3}|"
+    r"上|下|前編|後編|中編|総集編|完全版|特装版|デジタル版|"
+    r"デジタル特装版|DL版|電子書籍版|新装版|愛蔵版|R18版|無修正版)"
+    r"\s*$"
+)
+
+TAIL_NOISE = (
+    r"(?i)[\s\-_.,。、~〜~+＋&]+|第\s*\d+\s*[巻話章部回]|"
+    r"vol\.?\s*\d+|volume\s*\d+|ch\.?\s*\d+|chapter\s*\d+|\#\s*\d+|"
+    r"\d+|[①-⑳]+|[Ⅰ-Ⅻ]+|[一二三四五六七八九十]{1,3}|"
+    r"上|下|前編|後編|中編|総集編|完全版|特装版|デジタル版|"
+    r"デジタル特装版|DL版|電子書籍版|新装版|愛蔵版|R18版|無修正版"
+)
+
+def strip_brackets(s, leading=True):
+    changed = True
+    while changed:
+        changed = False
+        s = s.lstrip() if leading else s.rstrip()
+        for L, R in BRACKET_PAIRS:
+            if leading and s.startswith(L):
+                i = s.find(R)
+                if i != -1:
+                    s = s[i + len(R):]
+                    changed = True
+                    break
+            elif not leading and s.endswith(R):
+                i = s.rfind(L)
+                if i != -1:
+                    s = s[:i]
+                    changed = True
+                    break
+    return s
+
+def normalize(t):
+    s = t.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
+    s = strip_brackets(s, leading=True)
+    s = strip_brackets(s, leading=False)
+    while True:
+        m = re.search(VOL_TAIL, s)
+        if not m:
             break
-    min_len = min(len(title), len(name))
-    if cp >= 3 and cp * 10 >= min_len * 8 and cp > best_score:
-        best_path  = path
-        best_score = cp
+        s = s[:m.start()].rstrip()
+    s2 = re.sub(r"\d+\s*$", "", s)
+    if s2 != s and len(s2.strip()) >= 3:
+        s = s2.rstrip()
+    return re.sub(r"\s+", " ", s).strip()
+
+def same_series(a, b):
+    if not a or not b or a == b:
+        return (1.0 if a == b and a else 0.0)
+    short, long = (a, b) if len(a) <= len(b) else (b, a)
+    if long.startswith(short):
+        tail = long[len(short):]
+        cleaned = re.sub(TAIL_NOISE, "", tail).strip()
+        if cleaned == "":
+            return 0.99
+        return 0.0
+    r = SequenceMatcher(None, a, b).ratio()
+    return r if r >= THRESH else 0.0
+
+norm_title = normalize(title_raw)
+best_path = ""
+best_score = 0.0
+if len(norm_title) >= 3:
+    for name in os.listdir(dest):
+        path = os.path.join(dest, name)
+        if not os.path.isdir(path):
+            continue
+        norm_name = normalize(name)
+        if len(norm_name) < 3:
+            continue
+        score = same_series(norm_title, norm_name)
+        if score > best_score:
+            best_score = score
+            best_path = path
 
 print(best_path, end="")
 PYEOF

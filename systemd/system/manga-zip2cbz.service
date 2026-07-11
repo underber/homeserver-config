@@ -1,6 +1,7 @@
 [Unit]
 Description=Auto convert manga zip to cbz
-After=network.target
+After=network.target home-volkh-srv-media.mount
+BindsTo=home-volkh-srv-media.mount
 
 [Service]
 Type=simple
@@ -11,4 +12,4 @@ User=volkh
 Group=www-data
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target home-volkh-srv-media.mount

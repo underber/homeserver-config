@@ -1,5 +1,7 @@
 [Unit]
 Description=WAV to FLAC auto converter
+After=home-volkh-srv-media.mount
+BindsTo=home-volkh-srv-media.mount
 
 [Service]
 ExecStart=/bin/bash /srv/scripts/wav2flac.sh
@@ -7,4 +9,4 @@ Restart=always
 User=volkh
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target home-volkh-srv-media.mount

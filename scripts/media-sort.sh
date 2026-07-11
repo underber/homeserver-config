@@ -4,7 +4,7 @@ set -euo pipefail
 WATCH="/srv/media/incoming"
 MUSIC="/srv/media/music/incoming"
 MANGA_IN="/srv/media/manga/incoming"
-LOG="/srv/media/incoming/media-sort.log"
+LOG="/srv/media/media-sort.log"
 
 mkdir -p "$WATCH" "$MUSIC" "$MANGA_IN"
 
