@@ -1,11 +1,11 @@
 services:
   glances:
-    image: nicolargo/glances:latest
+    image: nicolargo/glances@sha256:1fbe838b461c3f71e25565290aa9ad75d2f0518fadd0b57eb46ef76adf14b8e4
     container_name: glances
     pid: host
     ports:
-      - "61208:61208"
-      - "61209:61209"
+      - "127.0.0.1:61208:61208"
+      - "127.0.0.1:61209:61209"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:

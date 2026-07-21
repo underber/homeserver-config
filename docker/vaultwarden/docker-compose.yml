@@ -1,9 +1,9 @@
 services:
   vaultwarden:
-    image: vaultwarden/server:latest
+    image: vaultwarden/server@sha256:43498a94b22f9563f2a94b53760ab3e710eefc0d0cac2efda4b12b9eb8690664
     container_name: vaultwarden
     restart: unless-stopped
     volumes:
       - ./data:/data
     ports:
-      - "8222:80"
+      - "127.0.0.1:8222:80"

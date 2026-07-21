@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh ChatGPT archive index hourly
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Persistent=true
+RandomizedDelaySec=2min
+
+[Install]
+WantedBy=timers.target

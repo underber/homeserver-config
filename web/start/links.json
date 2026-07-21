@@ -1,0 +1,26 @@
+[
+  {
+    "name": "amazon",
+    "url": "https://www.amazon.co.jp/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "ハーメルン",
+    "url": "https://syosetu.org/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "DLsite",
+    "url": "https://www.dlsite.com/maniax-touch/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "FANZA",
+    "url": "https://www.dmm.co.jp/dc/doujin/",
+    "iconMode": "auto",
+    "icon": ""
+  }
+]

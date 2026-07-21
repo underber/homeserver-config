@@ -1,7 +1,7 @@
 services:
   hbbs:
     container_name: hbbs
-    image: rustdesk/rustdesk-server:latest
+    image: rustdesk/rustdesk-server@sha256:10818ec05b179039c6660f4d8e74b303f0db2858bbad2b18e24992ea22d54cd6
     command: hbbs
     volumes:
       - ./data:/root
@@ -12,7 +12,7 @@ services:
 
   hbbr:
     container_name: hbbr
-    image: rustdesk/rustdesk-server:latest
+    image: rustdesk/rustdesk-server@sha256:10818ec05b179039c6660f4d8e74b303f0db2858bbad2b18e24992ea22d54cd6
     command: hbbr
     volumes:
       - ./data:/root
