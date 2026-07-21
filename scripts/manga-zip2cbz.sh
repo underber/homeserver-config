@@ -83,6 +83,15 @@ def normalize(t):
     s = t.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
     s = strip_brackets(s, leading=True)
     s = strip_brackets(s, leading=False)
+    # Handle a volume number followed by a subtitle, for example
+    # "作品名10〜副題〜" or "作品名5 副題". Dotted numbers such as
+    # "VOL.15" are deliberately excluded from this rule.
+    m = re.match(
+        r"^(.{4,}?[^0-9.])(?:第\s*)?\d{1,3}(?:[巻話章部回])?(?=[\s　:：\-~〜～—–])",
+        s,
+    )
+    if m:
+        s = m.group(1).rstrip()
     while True:
         m = re.search(VOL_TAIL, s)
         if not m:
@@ -91,7 +100,8 @@ def normalize(t):
     s2 = re.sub(r"\d+\s*$", "", s)
     if s2 != s and len(s2.strip()) >= 3:
         s = s2.rstrip()
-    return re.sub(r"\s+", " ", s).strip()
+    s = re.sub(r"\s+", " ", s).strip()
+    return re.sub(r"[!！?？。．.]+$", "", s).rstrip()
 
 def same_series(a, b):
     if not a or not b or a == b:
@@ -103,6 +113,12 @@ def same_series(a, b):
         if cleaned == "":
             return 0.99
         return 0.0
+    # Allow one-character spelling/censorship variation only when the
+    # normalized titles have the same length (for example 催眠 vs 催○).
+    if len(a) == len(b) and len(a) >= 5:
+        differences = sum(x != y for x, y in zip(a, b))
+        if differences == 1:
+            return 0.95
     r = SequenceMatcher(None, a, b).ratio()
     return r if r >= THRESH else 0.0
 
@@ -125,6 +141,13 @@ if len(norm_title) >= 3:
 print(best_path, end="")
 PYEOF
 }
+
+if [ "${1:-}" = "--find-series" ]; then
+  [ "$#" -eq 2 ] || { echo "usage: $0 --find-series TITLE" >&2; exit 2; }
+  find_series_dir "$2"
+  printf '\n'
+  exit 0
+fi
 
 convert_one() {
   local file="$1"
