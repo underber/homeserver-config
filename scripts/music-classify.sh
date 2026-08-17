@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WATCH="/srv/media/music/incoming"
+# wav2flac.sh is the sole consumer of incoming and places completed items here.
+# Keeping one writer per queue prevents races where two watchers move one file.
+WATCH="/srv/media/music/classify"
 LIBRARY="/srv/media/music/library"
 DOUJIN="/srv/media/music/doujin"
 UNSORTED="/srv/media/music/unsorted"

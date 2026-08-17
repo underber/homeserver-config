@@ -33,6 +33,7 @@ services:
     volumes:
       - nextcloud_data:/var/www/html
       - /srv/media:/mnt/media
+      - /srv/downloads:/mnt/downloads
     depends_on:
       db:
         condition: service_healthy

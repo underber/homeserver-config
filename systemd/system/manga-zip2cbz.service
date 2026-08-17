@@ -5,11 +5,16 @@ BindsTo=home-volkh-srv-media.mount
 
 [Service]
 Type=simple
+EnvironmentFile=-/etc/manga-library-scan.env
 ExecStart=/srv/scripts/manga-zip2cbz.sh
 Restart=always
 RestartSec=3
 User=volkh
 Group=www-data
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/srv/media /srv/incoming
 
 [Install]
 WantedBy=multi-user.target home-volkh-srv-media.mount

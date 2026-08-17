@@ -77,14 +77,14 @@ if $deploy; then
     systemctl --user daemon-reload 2>/dev/null && echo "  [ok] systemd --user reloaded" || true
 
     # Docker compose stacks
-    deploy_dir "$REPO/docker" ~/docker
+    deploy_dir "$REPO/docker" /srv/docker
 
     # Scripts
     if [[ -d "$REPO/scripts" ]]; then
-        mkdir -p ~/scripts
-        rsync -a "$REPO/scripts/" ~/scripts/
-        chmod +x ~/scripts/*.sh 2>/dev/null || true
-        echo "  [ok] -> ~/scripts/"
+        sudo mkdir -p /srv/scripts
+        sudo rsync -a "$REPO/scripts/" /srv/scripts/
+        sudo chmod +x /srv/scripts/*.sh 2>/dev/null || true
+        echo "  [ok] -> /srv/scripts/"
     fi
 
     echo ""

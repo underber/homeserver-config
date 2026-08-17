@@ -76,6 +76,14 @@ komga.ts:80 {
 	reverse_proxy 127.0.0.1:25600
 }
 
+audiobookshelf.ts:80 {
+	reverse_proxy 127.0.0.1:13378
+}
+
+stump.ts:80 {
+	reverse_proxy 127.0.0.1:10801
+}
+
 navidrome.ts:80 {
 	reverse_proxy 127.0.0.1:4533
 }
@@ -202,6 +210,23 @@ vault.ts:80 {
 		get_certificate tailscale
 	}
 	reverse_proxy 127.0.0.1:8222
+}
+
+
+:13378 {
+	bind tailscale/start
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:13378
+}
+
+:10801 {
+	bind tailscale/start
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:10801
 }
 
 :443 {

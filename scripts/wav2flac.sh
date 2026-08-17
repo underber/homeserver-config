@@ -1,7 +1,7 @@
 #!/bin/bash
 
-WATCH="/srv/media/music/incoming"
-DEST="/srv/media/music/library"
+WATCH="/srv/incoming/music"
+DEST="/srv/media/music/classify"
 BEET_LOG="$HOME/.config/beets/import.log"
 
 mkdir -p "$WATCH" "$DEST"
@@ -47,12 +47,12 @@ process_all() {
                     fi
                 fi
                 ;;
-            m4a|opus)
+            mp3|flac|m4a|aac|ogg|opus)
                 OUT_FILE="$OUT_DIR/$BASENAME"
                 if [ ! -f "$OUT_FILE" ] && [ -f "$FILE" ]; then
                     wait_until_stable "$FILE"
                     if [ -f "$FILE" ]; then
-                        mv -n -- "$FILE" "$OUT_FILE" 2>/dev/null
+                        mv -n -- "$FILE" "$OUT_FILE"
                         changed=1
                     fi
                 fi
@@ -62,7 +62,7 @@ process_all() {
                 if [ ! -f "$OUT_FILE" ] && [ -f "$FILE" ]; then
                     wait_until_stable "$FILE"
                     if [ -f "$FILE" ]; then
-                        cp -n -- "$FILE" "$OUT_FILE" 2>/dev/null
+                        mv -n -- "$FILE" "$OUT_FILE"
                         changed=1
                     fi
                 fi

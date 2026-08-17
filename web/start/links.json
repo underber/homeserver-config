@@ -1,25 +1,85 @@
 [
   {
-    "name": "amazon",
-    "url": "https://www.amazon.co.jp/",
+    "name": "AdGuard Home",
+    "url": "https://adguard.tail90daba.ts.net/",
     "iconMode": "auto",
     "icon": ""
   },
   {
-    "name": "ハーメルン",
-    "url": "https://syosetu.org/",
+    "name": "Audiobookshelf",
+    "url": "https://start.tail90daba.ts.net:13378/",
     "iconMode": "auto",
     "icon": ""
   },
   {
-    "name": "DLsite",
-    "url": "https://www.dlsite.com/maniax-touch/",
+    "name": "Nextcloud",
+    "url": "https://cloud.tail90daba.ts.net/",
     "iconMode": "auto",
     "icon": ""
   },
   {
-    "name": "FANZA",
-    "url": "https://www.dmm.co.jp/dc/doujin/",
+    "name": "FreshRSS",
+    "url": "https://freshrss.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Jellyfin",
+    "url": "https://jellyfin.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Kavita",
+    "url": "https://kavita.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Komga",
+    "url": "https://komga.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Navidrome",
+    "url": "https://navidrome.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Portainer",
+    "url": "https://portainer.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "SearXNG",
+    "url": "https://searxng.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Stump",
+    "url": "https://start.tail90daba.ts.net:10801/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Start",
+    "url": "https://start.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Syncthing",
+    "url": "https://sync.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Vaultwarden",
+    "url": "https://vault.tail90daba.ts.net/",
     "iconMode": "auto",
     "icon": ""
   }
