@@ -26,8 +26,18 @@ case "$ACTION" in
     ;;
 
   manga-rescan)
-    systemctl start media-library-refresh.service
-    echo "Media library refresh completed successfully."
+    if [[ -r /etc/media-library-refresh.env ]]; then
+      set -a
+      # shellcheck disable=SC1091
+      source /etc/media-library-refresh.env
+      set +a
+    fi
+    : "${KAVITA_API_KEY:?KAVITA_API_KEY is not configured}"
+    KAVITA_URL="${KAVITA_URL:-http://127.0.0.1:5001}"
+    curl --fail --silent --show-error --max-time 20 \
+      -X POST -H "x-api-key: $KAVITA_API_KEY" \
+      "${KAVITA_URL%/}/api/Library/scan-all" >/dev/null
+    echo "Kavita library rescan queued successfully."
     ;;
 
   restart-manga)
