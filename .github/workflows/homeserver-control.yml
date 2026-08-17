@@ -1,0 +1,34 @@
+name: Homeserver control
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Select an allowlisted operation
+        required: true
+        type: choice
+        default: status
+        options:
+          - status
+          - manga-rescan
+          - restart-manga
+          - manga-log
+          - backup-status
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homeserver-control
+  cancel-in-progress: false
+
+jobs:
+  control:
+    if: github.actor == github.repository_owner
+    runs-on: [self-hosted, linux, x64, homeserver-control]
+    timeout-minutes: 10
+    steps:
+      - name: Run allowlisted operation
+        env:
+          CONTROL_ACTION: ${{ inputs.action }}
+        run: sudo --non-interactive /usr/local/sbin/github-homeserver-control "$CONTROL_ACTION"
