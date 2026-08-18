@@ -6,6 +6,10 @@ After=network.target
 ExecStart=/usr/bin/python3 /srv/www/start/api.py
 Restart=always
 User=volkh
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/srv/www/start
 
 [Install]
 WantedBy=multi-user.target

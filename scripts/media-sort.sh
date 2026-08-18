@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WATCH="/srv/media/incoming"
-MUSIC="/srv/media/music/incoming"
-MANGA_IN="/srv/media/manga/incoming"
+WATCH="/srv/downloads"
+MUSIC="/srv/incoming/music"
+MANGA_IN="/srv/incoming/manga"
 LOG="/srv/media/media-sort.log"
 
 mkdir -p "$WATCH" "$MUSIC" "$MANGA_IN"

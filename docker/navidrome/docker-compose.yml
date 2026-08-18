@@ -1,9 +1,9 @@
 services:
   navidrome:
-    image: deluan/navidrome:latest
+    image: deluan/navidrome@sha256:a5dce8f33304714dd138e870cca0dcab3d937ca236be1a9f2b97da009d1a0048
     container_name: navidrome
     ports:
-      - "4533:4533"
+      - "127.0.0.1:4533:4533"
     environment:
       ND_SCANSCHEDULE: 1h
       ND_LOGLEVEL: info

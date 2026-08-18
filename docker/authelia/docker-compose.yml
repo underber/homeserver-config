@@ -1,9 +1,9 @@
 services:
   authelia:
-    image: authelia/authelia:latest
+    image: authelia/authelia@sha256:d23ee3c721d465b4749cc58541cda4aebe5aa6f19d7b5ce0afebb44ebee69591
     container_name: authelia
     restart: unless-stopped
     volumes:
       - ./config:/config
     ports:
-      - "9091:9091"
+      - "127.0.0.1:9091:9091"

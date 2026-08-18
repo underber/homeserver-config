@@ -1,9 +1,9 @@
 services:
   syncthing:
-    image: syncthing/syncthing
+    image: syncthing/syncthing@sha256:37c0e031d9f5559dfa416f0f9157509277d97a24abd0ad27590bd92a91616ecc
     container_name: syncthing
     ports:
-      - "8384:8384"
+      - "127.0.0.1:8384:8384"
       - "22000:22000"
       - "21027:21027/udp"
     volumes:

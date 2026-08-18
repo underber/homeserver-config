@@ -1,0 +1,17 @@
+[Unit]
+Description=Back up home-server application state with restic
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+RequiresMountsFor=/mnt/newmedia /srv/docker
+
+[Service]
+Type=oneshot
+ExecStart=/srv/scripts/homeserver-backup.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/srv/backup /mnt/newmedia/homeserver-restic
+NoNewPrivileges=yes

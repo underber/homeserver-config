@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WATCH="/srv/media/manga/incoming"
-DEST="/srv/media/manga/library"
-LOG="/srv/media/manga/zip2cbz.log"
+WATCH="${WATCH:-/srv/incoming/manga}"
+DEST="${DEST:-/srv/media/manga/library}"
+LOG="${LOG:-/srv/media/manga/zip2cbz.log}"
+KAVITA_URL="${KAVITA_URL:-http://127.0.0.1:5001}"
+KOMGA_URL="${KOMGA_URL:-http://127.0.0.1:25600}"
 
 mkdir -p "$WATCH" "$DEST"
 
@@ -17,6 +19,55 @@ wait_until_stable() {
     sleep 2
   done
   return 1
+}
+
+log_message() {
+  echo "$(date '+%F %T') $*" >> "$LOG"
+}
+
+scan_libraries() {
+  local response library_id
+
+  if [ -n "${KAVITA_API_KEY:-}" ]; then
+    if curl --fail --silent --show-error --max-time 15 \
+      -X POST -H "x-api-key: $KAVITA_API_KEY" \
+      "${KAVITA_URL%/}/api/Library/scan-all" >/dev/null; then
+      log_message "scan queued: Kavita"
+    else
+      log_message "scan failed: Kavita"
+    fi
+  else
+    log_message "scan skipped: KAVITA_API_KEY is not configured"
+  fi
+
+  if [ -n "${KOMGA_API_KEY:-}" ]; then
+    if ! response="$(curl --fail --silent --show-error --max-time 15 \
+      -H "X-API-Key: $KOMGA_API_KEY" \
+      "${KOMGA_URL%/}/api/v1/libraries")"; then
+      log_message "scan failed: could not list Komga libraries"
+      return 0
+    fi
+
+    while IFS= read -r library_id; do
+      [ -n "$library_id" ] || continue
+      if curl --fail --silent --show-error --max-time 15 \
+        -X POST -H "X-API-Key: $KOMGA_API_KEY" \
+        "${KOMGA_URL%/}/api/v1/libraries/${library_id}/scan" >/dev/null; then
+        log_message "scan queued: Komga library $library_id"
+      else
+        log_message "scan failed: Komga library $library_id"
+      fi
+    done < <(python3 -c '
+import json, sys
+data = json.load(sys.stdin)
+libraries = data.get("content", []) if isinstance(data, dict) else data
+for library in libraries:
+    if library.get("id"):
+        print(library["id"])
+' <<< "$response")
+  else
+    log_message "scan skipped: KOMGA_API_KEY is not configured"
+  fi
 }
 
 # Return the best-matching existing series directory for a title, or empty string.
@@ -59,6 +110,11 @@ TAIL_NOISE = (
     r"デジタル特装版|DL版|電子書籍版|新装版|愛蔵版|R18版|無修正版"
 )
 
+SEMANTIC_SEQUEL = (
+    r"再来|続|続編|後日談|番外編|外伝|リターンズ|"
+    r"returns?|sequel|another|after|again"
+)
+
 def strip_brackets(s, leading=True):
     changed = True
     while changed:
@@ -83,6 +139,33 @@ def normalize(t):
     s = t.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
     s = strip_brackets(s, leading=True)
     s = strip_brackets(s, leading=False)
+    # Strip semantic sequel labels when they are a trailing qualifier. These
+    # labels describe an installment but are not part of the canonical series
+    # title. Allow punctuation after the closing bracket, as in "（再来）。".
+    semantic_bracket_tail = (
+        r"(?i)[\s　\-_.,。、~〜～:：]*"
+        r"[\(\[（【〔「『<〈]\s*(?:" + SEMANTIC_SEQUEL + r")\s*"
+        r"[\)\]）】〕」』>〉][!！?？。．.]*$"
+    )
+    semantic_plain_tail = (
+        r"(?i)[\s　\-_.,。、~〜～:：]+(?:" + SEMANTIC_SEQUEL + r")"
+        r"[!！?？。．.]*$"
+    )
+    while True:
+        previous = s
+        s = re.sub(semantic_bracket_tail, "", s).rstrip()
+        s = re.sub(semantic_plain_tail, "", s).rstrip()
+        if s == previous:
+            break
+    # Handle a volume number followed by a subtitle, for example
+    # "作品名10〜副題〜" or "作品名5 副題". Dotted numbers such as
+    # "VOL.15" are deliberately excluded from this rule.
+    m = re.match(
+        r"^(.{4,}?[^0-9.])(?:第\s*)?\d{1,3}(?:[巻話章部回])?(?=[\s　:：\-~〜～—–])",
+        s,
+    )
+    if m:
+        s = m.group(1).rstrip()
     while True:
         m = re.search(VOL_TAIL, s)
         if not m:
@@ -91,7 +174,8 @@ def normalize(t):
     s2 = re.sub(r"\d+\s*$", "", s)
     if s2 != s and len(s2.strip()) >= 3:
         s = s2.rstrip()
-    return re.sub(r"\s+", " ", s).strip()
+    s = re.sub(r"\s+", " ", s).strip()
+    return re.sub(r"[!！?？。．.]+$", "", s).rstrip()
 
 def same_series(a, b):
     if not a or not b or a == b:
@@ -103,12 +187,18 @@ def same_series(a, b):
         if cleaned == "":
             return 0.99
         return 0.0
+    # Allow one-character spelling/censorship variation only when the
+    # normalized titles have the same length (for example 催眠 vs 催○).
+    if len(a) == len(b) and len(a) >= 5:
+        differences = sum(x != y for x, y in zip(a, b))
+        if differences == 1:
+            return 0.95
     r = SequenceMatcher(None, a, b).ratio()
     return r if r >= THRESH else 0.0
 
 norm_title = normalize(title_raw)
 best_path = ""
-best_score = 0.0
+best_key = (0.0, 0, 0)
 if len(norm_title) >= 3:
     for name in os.listdir(dest):
         path = os.path.join(dest, name)
@@ -118,13 +208,24 @@ if len(norm_title) >= 3:
         if len(norm_name) < 3:
             continue
         score = same_series(norm_title, norm_name)
-        if score > best_score:
-            best_score = score
+        # When multiple directories normalize to the same series, prefer the
+        # shortest canonical name. This prevents an already-split sequel
+        # directory from winning merely because its raw title is an exact match.
+        key = (score, -len(norm_name), -len(name))
+        if key > best_key:
+            best_key = key
             best_path = path
 
 print(best_path, end="")
 PYEOF
 }
+
+if [ "${1:-}" = "--find-series" ]; then
+  [ "$#" -eq 2 ] || { echo "usage: $0 --find-series TITLE" >&2; exit 2; }
+  find_series_dir "$2"
+  printf '\n'
+  exit 0
+fi
 
 convert_one() {
   local file="$1"
@@ -160,11 +261,12 @@ convert_one() {
   fi
 
   mv "$file" "$out"
-  echo "$(date '+%F %T') moved: $file -> $out" >> "$LOG"
+  log_message "moved: $file -> $out"
+  scan_libraries
 }
 
-export -f wait_until_stable find_series_dir convert_one
-export DEST LOG
+export -f wait_until_stable log_message scan_libraries find_series_dir convert_one
+export DEST LOG KAVITA_URL KOMGA_URL KAVITA_API_KEY KOMGA_API_KEY
 
 find "$WATCH" -maxdepth 1 -type f \( -iname '*.zip' -o -iname '*.cbz' \) -print0 | while IFS= read -r -d '' f; do
   convert_one "$f"

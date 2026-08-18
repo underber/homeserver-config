@@ -1,0 +1,18 @@
+[Unit]
+Description=Watch media folders and refresh media libraries
+Requires=docker.service
+After=docker.service
+BindsTo=home-volkh-srv-media.mount
+After=home-volkh-srv-media.mount
+[Service]
+Type=simple
+ExecStart=/srv/scripts/media-library-watch.sh
+Restart=on-failure
+RestartSec=10s
+RuntimeDirectory=media-library-watch
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/run/media-library-watch
+[Install]
+WantedBy=multi-user.target home-volkh-srv-media.mount

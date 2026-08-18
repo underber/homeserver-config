@@ -78,15 +78,18 @@ sync_file /etc/caddy/Caddyfile "$REPO/caddy/Caddyfile"
 echo "==> Syncing systemd user units  (~/.config/systemd/user/ -> systemd/user/)"
 sync_dir ~/.config/systemd/user "$REPO/systemd/user"
 
-echo "==> Syncing systemd system units  (/etc/systemd/system/ -> systemd/system/)"
+echo "==> Syncing selected systemd system units"
 if [[ -d /etc/systemd/system ]]; then
     mkdir -p "$REPO/systemd/system"
-    find /etc/systemd/system \
-        -maxdepth 1 \
-        \( -name '*.service' -o -name '*.timer' -o -name '*.mount' -o -name '*.socket' \) \
-        ! -type l \
-        -exec cp {} "$REPO/systemd/system/" \;
-    ok "/etc/systemd/system/ (non-symlink units)"
+    units=(AdGuardHome.service manga-by-date.service manga-zip2cbz.service
+           media-sort.service music-classify.service start-api.service
+           wav2flac.service homeserver-backup.service homeserver-backup.timer
+           chatgpt-archive.service chatgpt-archive.timer
+           homeserver-healthcheck.service homeserver-healthcheck.timer
+           duckdns-update.service duckdns-update.timer)
+    for unit in "${units[@]}"; do
+        sync_file "/etc/systemd/system/$unit" "$REPO/systemd/system/$unit"
+    done
 else
     skip "/etc/systemd/system/ (not found)"
 fi
