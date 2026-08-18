@@ -78,6 +78,8 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(value, ensure_ascii=False).encode())
     def do_GET(self):
         path=urlparse(self.path).path
+        if path.startswith('/api/'):
+            path=path[4:]
         static = {'/': ('index.html','text/html; charset=utf-8'), '/index.html': ('index.html','text/html; charset=utf-8'), '/manifest.webmanifest': ('manifest.webmanifest','application/manifest+json'), '/sw.js': ('sw.js','text/javascript; charset=utf-8')}
         if path in static:
             name, content_type = static[path]
@@ -109,6 +111,8 @@ class Handler(BaseHTTPRequestHandler):
         length=int(self.headers.get('Content-Length','0'))
         if length<0 or length>MAX_BODY: raise ValueError('body too large')
         return self.rfile.read(length)
+        if path.startswith('/api/'):
+            path=path[4:]
     def do_POST(self):
         path=urlparse(self.path).path
         try:

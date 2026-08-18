@@ -9,7 +9,19 @@
 		cloud {
 			tags tag:caddy
 		}
+		audiobookshelf {
+			tags tag:caddy
+		}
+		glances {
+			tags tag:caddy
+		}
+		home {
+			tags tag:caddy
+		}
 		start {
+			tags tag:caddy
+		}
+		stump {
 			tags tag:caddy
 		}
 		freshrss {
@@ -121,6 +133,14 @@ vault.ts:80 {
 # === HTTPS via Tailscale ===
 
 :443 {
+	bind tailscale/audiobookshelf
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:13378
+}
+
+:443 {
 	bind tailscale/adguard
 	tls {
 		get_certificate tailscale
@@ -145,6 +165,31 @@ vault.ts:80 {
 }
 
 :443 {
+	bind tailscale/glances
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:61208
+}
+
+:443 {
+	bind tailscale/home
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:3001
+}
+
+:443 {
+	bind tailscale/jellyfin
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8096
+}
+
+# Jellyfin HTTPS on its conventional port over Tailscale.
+:8096 {
 	bind tailscale/jellyfin
 	tls {
 		get_certificate tailscale
@@ -205,13 +250,20 @@ vault.ts:80 {
 }
 
 :443 {
+	bind tailscale/stump
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:10801
+}
+
+:443 {
 	bind tailscale/vault
 	tls {
 		get_certificate tailscale
 	}
 	reverse_proxy 127.0.0.1:8222
 }
-
 
 :13378 {
 	bind tailscale/start
