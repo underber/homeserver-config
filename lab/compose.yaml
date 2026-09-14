@@ -25,9 +25,9 @@ services:
       MOIRE_SHARPEN_PERCENT: "115"
       MOIRE_POLL_SECONDS: "20"
     volumes:
-      - /srv/media/manga/moire-inbox/incoming:/data/incoming
-      - /srv/media/manga/moire-inbox/processed:/data/processed
-      - /srv/media/manga/moire-inbox/review:/data/review
+      - /home/volkh/srv/media/manga/moire-inbox/incoming:/data/incoming
+      - /home/volkh/srv/media/manga/moire-inbox/processed:/data/processed
+      - /home/volkh/srv/media/manga/moire-inbox/review:/data/review
     mem_limit: 512m
     cpus: 1.0
     security_opt: ["no-new-privileges:true"]
