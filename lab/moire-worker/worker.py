@@ -1,6 +1,6 @@
 import io, json, os, time, zipfile
 from pathlib import Path
-from PIL import Image, ImageFilter, ImageStat
+from PIL import Image, ImageFilter, ImageStat, ImageChops
 INBOX=Path(os.environ.get("MOIRE_INBOX","/data/incoming")); OUT=Path(os.environ.get("MOIRE_PROCESSED","/data/processed")); REVIEW=Path(os.environ.get("MOIRE_REVIEW","/data/review"))
 POLL=float(os.environ.get("MOIRE_POLL_SECONDS","20")); LIGHT=float(os.environ.get("MOIRE_LIGHT_BLUR","0.35")); HEAVY=float(os.environ.get("MOIRE_HEAVY_BLUR","0.70")); THRESH=float(os.environ.get("MOIRE_SCORE_THRESHOLD","7.0")); HEAVY_T=float(os.environ.get("MOIRE_HEAVY_THRESHOLD","15.0"))
 EXT={".jpg",".jpeg",".png",".webp"}
