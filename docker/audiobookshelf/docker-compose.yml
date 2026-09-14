@@ -1,0 +1,15 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf@sha256:180acad33d69c99ed208676465d8edcb268fa46967735579a7810859885b1a8e
+    container_name: audiobookshelf
+    user: "1000:1000"
+    ports:
+      - "127.0.0.1:13378:80"
+    environment:
+      TZ: Asia/Tokyo
+    volumes:
+      - /srv/docker/audiobookshelf/config:/config
+      - /srv/docker/audiobookshelf/metadata:/metadata
+      - /srv/media/audiobooks:/audiobooks
+      - /srv/media/podcasts:/podcasts
+    restart: unless-stopped

@@ -1,0 +1,12 @@
+[Unit]
+Description=Index latest ChatGPT export from Nextcloud
+RequiresMountsFor=/var/lib/docker /srv/data
+
+[Service]
+Type=oneshot
+ExecStart=/srv/scripts/chatgpt-archive.py
+User=root
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/srv/data/chatgpt

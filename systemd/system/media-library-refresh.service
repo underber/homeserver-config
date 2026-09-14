@@ -1,0 +1,12 @@
+[Unit]
+Description=Refresh Jellyfin, Komga and Kavita libraries
+Requires=docker.service
+After=docker.service
+ConditionPathIsMountPoint=/srv/media
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/media-library-refresh.env
+ExecStart=/srv/scripts/media-library-refresh.sh
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict

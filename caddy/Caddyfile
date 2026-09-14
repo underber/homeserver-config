@@ -9,6 +9,21 @@
 		cloud {
 			tags tag:caddy
 		}
+		audiobookshelf {
+			tags tag:caddy
+		}
+		glances {
+			tags tag:caddy
+		}
+		home {
+			tags tag:caddy
+		}
+		start {
+			tags tag:caddy
+		}
+		stump {
+			tags tag:caddy
+		}
 		freshrss {
 			tags tag:caddy
 		}
@@ -73,6 +88,14 @@ komga.ts:80 {
 	reverse_proxy 127.0.0.1:25600
 }
 
+audiobookshelf.ts:80 {
+	reverse_proxy 127.0.0.1:13378
+}
+
+stump.ts:80 {
+	reverse_proxy 127.0.0.1:10801
+}
+
 navidrome.ts:80 {
 	reverse_proxy 127.0.0.1:4533
 }
@@ -97,19 +120,25 @@ vault.ts:80 {
 	reverse_proxy 127.0.0.1:8222
 }
 
-# Catch-all: serve startpage, proxy API
+# Catch-all: control center and API
 :80 {
-	handle /api/* {
+	handle_path /api/* {
 		reverse_proxy 127.0.0.1:5000
 	}
-
 	handle {
-		root * /srv/www/start
-		file_server
+		reverse_proxy 127.0.0.1:5000
 	}
 }
 
 # === HTTPS via Tailscale ===
+
+:443 {
+	bind tailscale/audiobookshelf
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:13378
+}
 
 :443 {
 	bind tailscale/adguard
@@ -136,6 +165,31 @@ vault.ts:80 {
 }
 
 :443 {
+	bind tailscale/glances
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:61208
+}
+
+:443 {
+	bind tailscale/home
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:3001
+}
+
+:443 {
+	bind tailscale/jellyfin
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:8096
+}
+
+# Jellyfin HTTPS on its conventional port over Tailscale.
+:8096 {
 	bind tailscale/jellyfin
 	tls {
 		get_certificate tailscale
@@ -196,9 +250,46 @@ vault.ts:80 {
 }
 
 :443 {
+	bind tailscale/stump
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:10801
+}
+
+:443 {
 	bind tailscale/vault
 	tls {
 		get_certificate tailscale
 	}
 	reverse_proxy 127.0.0.1:8222
+}
+
+:13378 {
+	bind tailscale/start
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:13378
+}
+
+:10801 {
+	bind tailscale/start
+	tls {
+		get_certificate tailscale
+	}
+	reverse_proxy 127.0.0.1:10801
+}
+
+:443 {
+	bind tailscale/start
+	tls {
+		get_certificate tailscale
+	}
+	handle_path /api/* {
+		reverse_proxy 127.0.0.1:5000
+	}
+	handle {
+		reverse_proxy 127.0.0.1:5000
+	}
 }

@@ -1,9 +1,10 @@
 services:
   jellyfin:
-    image: jellyfin/jellyfin:latest
+    image: jellyfin/jellyfin@sha256:333b647716631443a43c7fabac4b0c46b4e2f036bad19547e00958f10f721b85
     container_name: jellyfin
     ports:
-      - "8096:8096"
+      - "127.0.0.1:8096:8096"
+      - "172.16.0.138:8096:8096"
     volumes:
       - ./config:/config
       - ./cache:/cache

@@ -1,10 +1,10 @@
 services:
   komga:
-    image: gotson/komga:latest
+    image: gotson/komga@sha256:dae630271561b642d47c9723803ec77900d1f0a803fbe6a42da69db5b21ebaeb
     container_name: komga
     user: "1000:1000"
     ports:
-      - "25600:25600"
+      - "127.0.0.1:25600:25600"
     volumes:
       - /srv/docker/komga/config:/config
       - /srv/media/manga/library:/data

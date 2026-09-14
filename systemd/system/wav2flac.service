@@ -7,6 +7,10 @@ BindsTo=home-volkh-srv-media.mount
 ExecStart=/bin/bash /srv/scripts/wav2flac.sh
 Restart=always
 User=volkh
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/srv/media /srv/incoming /home/volkh/.config/beets
 
 [Install]
 WantedBy=multi-user.target home-volkh-srv-media.mount

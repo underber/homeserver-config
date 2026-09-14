@@ -1,0 +1,12 @@
+[Unit]
+Description=Check home-server health and notify Nextcloud
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/srv/scripts/homeserver-healthcheck.sh
+StateDirectory=homeserver-healthcheck
+ProtectSystem=strict
+ReadWritePaths=/var/lib/homeserver-healthcheck
+NoNewPrivileges=yes

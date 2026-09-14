@@ -1,29 +1,49 @@
 services:
   db:
-    image: postgres:15
-    restart: always
+    image: postgres:15@sha256:866264fb97643e747f9d0981cd060114f83b49450e5bac4988324bb3c6af2fd7
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: nextcloud
-      POSTGRES_USER: nextcloud
+      POSTGRES_DB: ${POSTGRES_DB:-nextcloud}
+      POSTGRES_USER: ${POSTGRES_USER:-nextcloud}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    logging: &default-logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   app:
-    image: nextcloud
-    restart: always
+    image: nextcloud@sha256:e8071b07f3d4f4b173de674dd7202c94140a2ade17a11e1403446dadde11c63d
+    restart: unless-stopped
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     environment:
-      POSTGRES_DB: nextcloud
-      POSTGRES_USER: nextcloud
+      POSTGRES_DB: ${POSTGRES_DB:-nextcloud}
+      POSTGRES_USER: ${POSTGRES_USER:-nextcloud}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_HOST: db
     volumes:
       - nextcloud_data:/var/www/html
       - /srv/media:/mnt/media
+      - /srv/downloads:/mnt/downloads
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/status.php | grep -q '\"installed\":true'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging: *default-logging
 
 volumes:
   db_data:

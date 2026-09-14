@@ -1,0 +1,104 @@
+[
+  {
+    "name": "AdGuard Home",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:3000/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Audiobookshelf",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:13378/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Nextcloud",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:8080/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "FreshRSS",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:8085/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Jellyfin",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:8096/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Kavita",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:5001/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Komga",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:25600/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Navidrome",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:4533/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Portainer",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:9443/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "SearXNG",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:8081/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Stump",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:10801/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Start",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Syncthing",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:8384/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Vaultwarden",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:8222/",
+    "iconMode": "auto",
+    "icon": ""
+  }
+  ,{
+    "name": "Homepage",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:3001/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Glances",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:61208/",
+    "iconMode": "auto",
+    "icon": ""
+  },
+  {
+    "name": "Authelia",
+    "url": "https://volkh-thinkstation-p320-tiny.tail90daba.ts.net:9091/",
+    "iconMode": "auto",
+    "icon": ""
+  }
+]

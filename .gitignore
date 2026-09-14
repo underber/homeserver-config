@@ -55,5 +55,7 @@ docker/*/cache/
 *~
 .DS_Store
 Thumbs.db
+__pycache__/
+*.pyc
 systemd/system/snap-*
 systemd/system/snap.*

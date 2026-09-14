@@ -1,0 +1,11 @@
+[Unit]
+Description=Update DuckDNS address
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/srv/scripts/duckdns-update.sh
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict

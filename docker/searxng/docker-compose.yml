@@ -1,10 +1,10 @@
 services:
   searxng:
-    image: searxng/searxng
+    image: searxng/searxng@sha256:94eb895e1195cb057239806a70e27b0fc8ae11dc0f6f877ef330125516774efd
     container_name: searxng
     restart: unless-stopped
     ports:
-      - "8081:8080"
+      - "127.0.0.1:8081:8080"
     volumes:
       - ./searxng:/etc/searxng
     environment:
