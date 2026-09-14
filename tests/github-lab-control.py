@@ -45,7 +45,7 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(args[:5], ['-u', 'pc-lab', '--', '/usr/bin/env', '-i'])
         self.assertIn('DOCKER_HOST=unix:///run/user/12345/docker.sock', args)
         self.assertNotIn(payload, args)
-        self.assertIn('HOME=/srv/pc-lab', args)
+        self.assertIn('HOME=/home/pc-lab', args)
 
     def test_predefined_actions_use_fixed_commands(self):
         for action in ['status', 'up', 'stop', 'down', 'logs']:

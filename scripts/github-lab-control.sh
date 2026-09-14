@@ -13,7 +13,7 @@ case "$1" in
 esac
 if [[ $EUID != 0 ]]; then echo 'Run through the installed sudo rule.' >&2; exit 1; fi
 readonly lab_uid="$(/usr/bin/id -u pc-lab)"
-readonly lab_home=/srv/pc-lab
+readonly lab_home=/home/pc-lab
 readonly lab_runtime="/run/user/$lab_uid"
 # env -i removes runner credentials and inherited Docker/shell configuration.
 # The entire caller script runs AFTER dropping root privileges.

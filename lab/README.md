@@ -11,7 +11,7 @@ GitHubの **Actions → Lab control → Run workflow** で操作します。ブ�
 | logs | 直近100行のログ |
 | exec | command欄の任意のBashコマンドを実行 |
 
-`exec` は `/srv/pc-lab/workspace` を作業場所として実行します。例:
+`exec` は `/home/pc-lab/workspace` を作業場所として実行します。例:
 
 ```bash
 docker ps -a
@@ -39,9 +39,9 @@ printf '<h1>スマホから更新しました</h1>\n' > www/index.html
 sudo bash scripts/install-lab-actions.sh
 ```
 
-インストーラーは `uidmap`・`dbus-user-session`・`slirp4netns` の導入、`pc-lab` ユーザーの作成、rootless Dockerの自動起動、限定sudo入口の設置と動作検証を行います。既に同名ユーザーやディレクトリが存在する場合は停止します。途中失敗した場合は、状態を確認してから復旧してください。
+インストーラーは `uidmap`・`dbus-user-session`・`slirp4netns` の導入、`pc-lab` ユーザーの作成、rootless Dockerの自動起動、限定sudo入口の設置と動作検証を行います。途中失敗後も再実行できます。旧 `/srv/pc-lab` で作成済みの専用ユーザーは `/home/pc-lab` に移行し、既存の検証用設定ファイルは保持します。想定外のホーム設定や移行先の衝突がある場合は停止します。
 
-- 作業場所: `/srv/pc-lab/workspace`
+- 作業場所: `/home/pc-lab/workspace`
 - このPC: http://127.0.0.1:18081
 - Tailscale端末: `http://このPCのTailscale-IP:18081`（既存アクセスルールに従う）
 - ローカル操作: `sudo -n /usr/local/sbin/github-lab-control status`
