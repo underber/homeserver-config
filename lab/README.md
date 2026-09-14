@@ -49,3 +49,7 @@ sudo bash scripts/install-lab-actions.sh
 既存の `~/lab` のWeb（18080）、本番Docker、ホストTailscaleとHomeserver controlの権限は変更しません。検証用の2つ目のTailscaleは未導入です。必要に応じて検証用Docker内に独立したstateで追加できます。
 
 参考: [Docker rootless](https://docs.docker.com/engine/security/rootless/)、[GitHub self-hosted runners](https://docs.github.com/en/actions/concepts/runners/self-hosted-runners)
+
+## 日本語でCodexに指示する
+
+非公開の [pc-lab-control](https://github.com/underber/pc-lab-control/issues) のIssue本文またはコメントに `@codex 指示内容` を投稿します。このPCの検証環境で実行し、同じIssueへ結果を返信します。
