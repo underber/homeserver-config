@@ -4,7 +4,6 @@ services:
     image: nginxinc/nginx-unprivileged:stable-alpine
     restart: unless-stopped
     ports:
-      - "127.0.0.1:18081:8080"
       - "${TAILSCALE_IP:?Set TAILSCALE_IP in .env}:18081:8080"
     volumes:
       - ./www:/usr/share/nginx/html:ro

@@ -72,5 +72,5 @@ test ! -r /home/volkh/.ssh
 docker info --format '{{json .SecurityOptions}}' | grep -q rootless
 printf 'Lab isolation checks passed.\n'
 CHECK
-curl --noproxy '*' --fail --silent http://127.0.0.1:18081/ >/dev/null
-printf '\nInstalled. Local: http://127.0.0.1:18081 / Tailscale: http://%s:18081\n' "$lab_ip"
+curl --noproxy '*' --fail --silent "http://$lab_ip:18081/" >/dev/null
+printf '\nInstalled. This PC and Tailscale: http://%s:18081\n' "$lab_ip"
