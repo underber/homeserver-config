@@ -16,3 +16,24 @@ services:
       interval: 10s
       timeout: 3s
       retries: 6
+
+  moire-worker:
+    build: ./moire-worker
+    restart: unless-stopped
+    environment:
+      MOIRE_BLUR_RADIUS: "0.55"
+      MOIRE_SHARPEN_PERCENT: "115"
+      MOIRE_POLL_SECONDS: "20"
+    volumes:
+      - moire-inbox:/data/incoming
+      - moire-processed:/data/processed
+      - moire-review:/data/review
+    mem_limit: 512m
+    cpus: 1.0
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+
+volumes:
+  moire-inbox:
+  moire-processed:
+  moire-review:

@@ -53,3 +53,5 @@ sudo bash scripts/install-lab-actions.sh
 ## 日本語でCodexに指示する
 
 非公開の [pc-lab-control](https://github.com/underber/pc-lab-control/issues) のIssue本文またはコメントに `@codex 指示内容` を投稿します。このPCの検証環境で実行し、同じIssueへ結果を返信します。
+
+`moire-worker` は専用ボリュームの `incoming/` を監視し、元CBZを変更せず `processed/` と `review/` に出力します。補正強度は `MOIRE_BLUR_RADIUS` と `MOIRE_SHARPEN_PERCENT` で調整できます。
