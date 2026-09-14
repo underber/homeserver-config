@@ -1,0 +1,39 @@
+name: Lab control
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 検証環境の操作（exec は任意のシェルコマンド）
+        required: true
+        type: choice
+        default: status
+        options: [status, up, stop, down, logs, exec]
+      command:
+        description: exec のときに実行するコマンド（秘密情報を入力しない）
+        required: false
+        type: string
+        default: 'docker ps'
+permissions:
+  contents: read
+concurrency:
+  group: pc-lab-control
+  cancel-in-progress: false
+jobs:
+  lab:
+    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, linux, x64, homeserver-control]
+    timeout-minutes: 30
+    steps:
+      - name: Operate isolated lab
+        env:
+          LAB_ACTION: ${{ inputs.action }}
+          LAB_COMMAND: ${{ inputs.command }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$LAB_ACTION" == exec ]]; then
+            [[ -n "$LAB_COMMAND" ]] || { echo 'command is required for exec'; exit 2; }
+            printf '%s\n' "$LAB_COMMAND" | sudo --non-interactive /usr/local/sbin/github-lab-control exec
+          else
+            sudo --non-interactive /usr/local/sbin/github-lab-control "$LAB_ACTION"
+          fi
